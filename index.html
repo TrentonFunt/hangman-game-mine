@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Hangman Game</title>
+
+</head>
+<body>
+    <header>
+        <h1>Hangman Game</h1>
+        <p>Guess the word before the hangman is complete!</p>
+    </header>
+    
+    <main>
+        <div class="category-selector">
+            <select id="category-select">
+                <option value="animals">Animals</option>
+                <option value="countries">Countries</option>
+                <option value="fruits">Fruits</option>
+                <option value="sports">Sports</option>
+            </select>
+        </div>
+        
+        <div class="game-container">
+            <div class="game-info">
+                <div>Tries left: <span id="tries-left">6</span></div>
+                <div>Score: <span id="score">0</span></div>
+            </div>
+            
+            <div class="hint" id="hint">
+                Hint will appear here...
+            </div>
+            
+            <div class="hangman-drawing" id="hangman-drawing">
+                <svg viewBox="0 0 200 200">
+                    <!-- Base -->
+                    <line x1="20" y1="180" x2="100" y2="180" stroke="black" stroke-width="4" class="hangman-part" id="part-0" />
+                    <!-- Vertical bar -->
+                    <line x1="60" y1="20" x2="60" y2="180" stroke="black" stroke-width="4" class="hangman-part" id="part-1" />
+                    <!-- Horizontal bar -->
+                    <line x1="60" y1="20" x2="140" y2="20" stroke="black" stroke-width="4" class="hangman-part" id="part-2" />
+                    <!-- Rope -->
+                    <line x1="140" y1="20" x2="140" y2="40" stroke="black" stroke-width="4" class="hangman-part" id="part-3" />
+                    <!-- Head -->
+                    <circle cx="140" cy="60" r="20" stroke="black" stroke-width="4" fill="none" class="hangman-part" id="part-4" />
+                    <!-- Body -->
+                    <line x1="140" y1="80" x2="140" y2="120" stroke="black" stroke-width="4" class="hangman-part" id="part-5" />
+                    <!-- Left arm -->
+                    <line x1="140" y1="90" x2="120" y2="100" stroke="black" stroke-width="4" class="hangman-part" id="part-6" />
+                    <!-- Right arm -->
+                    <line x1="140" y1="90" x2="160" y2="100" stroke="black" stroke-width="4" class="hangman-part" id="part-7" />
+                    <!-- Left leg -->
+                    <line x1="140" y1="120" x2="120" y2="150" stroke="black" stroke-width="4" class="hangman-part" id="part-8" />
+                    <!-- Right leg -->
+                    <line x1="140" y1="120" x2="160" y2="150" stroke="black" stroke-width="4" class="hangman-part" id="part-9" />
+                </svg>
+            </div>
+            
+            <div class="word-display" id="word-display">
+                <!-- Letter boxes will be dynamically added here -->
+            </div>
+            
+            <div class="message" id="message"></div>
+            
+            <div class="keyboard" id="keyboard">
+                <!-- Keys will be dynamically added here -->
+            </div>
+            
+            <button class="new-game-btn" id="new-game-btn">New Game</button>
+        </div>
+    </main>
+    <script src="script.js"></script>
+        
+</body>
+</html>
