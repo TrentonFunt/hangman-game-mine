@@ -1,3 +1,26 @@
+// add sound effects
+const soundEffects = {
+    correct: {
+        audio: new Audio('/sounds/correct.wav'),
+        maxDuration: 1 // seconds
+    },
+    wrong: {
+        audio: new Audio('/sounds/wrong.wav'),
+        maxDuration: 1.5
+    },
+    win: {
+        audio: new Audio('/sounds/win.wav'),
+        maxDuration: 3
+    },
+    lose: {
+        audio: new Audio('/sounds/lose.mp3'),
+        maxDuration: 3
+    }
+};
+
+Object.values(soundEffects).forEach(sound => {
+    sound.volume = 0.5; // 50% volume (0.0 to 1.0)
+});
 // game data for each category
 const categories = {
     animals: {
@@ -68,6 +91,12 @@ function gamePlay(){
 
     console.log(currentWord)
 
+    // Reset keyboard interactions
+    keyboard.querySelectorAll('.key').forEach(key => {
+        key.style.cursor = 'pointer';
+        key.addEventListener('click', handleGuess);
+    });
+
     // function to display guessed letters(word)
     createWordDisplay();
 
@@ -76,6 +105,17 @@ function gamePlay(){
 
     // create function reset hangman 
     resetHangman()
+    soundEffects.win.pause();
+    soundEffects.lose.pause();
+    soundEffects.win.play();
+    soundEffects.lose.play();
+
+    document.getElementById('high-score').textContent = highScore;
+
+    Object.values(soundEffects).forEach(sound => {
+        sound.audio.pause();
+        sound.audio.currentTime = 0;
+    });
 }
 function createWordDisplay(){
     wordDisplay.innerHTML = '';
@@ -123,12 +163,22 @@ function handleGuess(letter){
     if (currentWord.includes(letter)){
         key.classList.add('correct');
         updateWordDisplay(letter);
+        playSound('correct');
         
     }else{
         key.classList.add('wrong');
         wrongGuesses ++
         triesLeft.textContent = maxTries - wrongGuesses;
         updateHangman();
+        playSound('wrong');
+    }
+
+    if (checkGameStatus()) {
+        // Disable further guesses
+        keyboard.querySelectorAll('.key').forEach(key => {
+            key.removeEventListener('click', handleGuess);
+            key.style.cursor = 'not-allowed';
+        });
     }
 }
 
@@ -155,8 +205,42 @@ function isWordComplete(){
     }return true;
 }
 
-// function handleWin() {
+// function handleWin() 
 
+function checkGameStatus() {
+    if (isWordComplete()) {
+        score += maxTries - wrongGuesses; // Bonus points for remaining tries
+        scoreElement.textContent = score;
+        messageElement.textContent = 'Congratulations! You won! 🎉';
+        messageElement.className = 'success';
+        playSound('win');
+        return true;
+    }
+
+    if (wrongGuesses >= maxTries) {
+        messageElement.textContent = `Game Over! The word was: ${currentWord}`;
+        messageElement.className = 'danger';
+        playSound('lose');
+        return true;
+    }
+
+    return false;
+}
+
+
+function playSound(soundType) {
+    const sound = soundEffects[soundType];
+    sound.audio.pause(); // Access audio property
+    sound.audio.currentTime = 0;
+    sound.audio.play(); // Access audio property
+
+    setTimeout(() => {
+        if (!sound.audio.paused) {
+            sound.audio.pause();
+            sound.audio.currentTime = 0;
+        }
+    }, sound.maxDuration * 1000);
+}
 // }
 // event listeners
 categorySelect.addEventListener('change', gamePlay)
