@@ -1,3 +1,6 @@
+// define highscore
+let highScore = localStorage.getItem('hangmanHighScore') || 0;
+
 // add sound effects
 const soundEffects = {
     correct: {
@@ -110,12 +113,12 @@ function gamePlay(){
     soundEffects.win.play();
     soundEffects.lose.play();
 
-    document.getElementById('high-score').textContent = highScore;
-
     Object.values(soundEffects).forEach(sound => {
         sound.audio.pause();
         sound.audio.currentTime = 0;
     });
+
+    document.getElementById('high-score').textContent = highScore;
 }
 function createWordDisplay(){
     wordDisplay.innerHTML = '';
@@ -222,6 +225,13 @@ function checkGameStatus() {
         messageElement.className = 'danger';
         playSound('lose');
         return true;
+    }
+
+    if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('hangmanHighScore', highScore);
+        document.getElementById('high-score').textContent = highScore;
+        messageElement.textContent = `New High Score! ${highScore}`;
     }
 
     return false;
